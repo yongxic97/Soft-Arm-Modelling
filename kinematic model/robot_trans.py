@@ -1,7 +1,7 @@
 # First written for Graduation Project 'Research on dynamic modelling of a soft robot arm with peumatic bellows actuators and a
 # damping support structure'. Functions in this module deals with robot-specefic and robot-independent transformations of the robot.
 #
-# Arthor: Yongxi Cao  (Affiliation when doing the project: Dept. Mechincal & Energy Engineering, SUSTech)
+# Author: Yongxi Cao  (Affiliation when doing the project: Dept. Mechincal & Energy Engineering, SUSTech)
 # Email: yongxi.cao.2000@gmail.com
 # v1.0: 2022-Mar-12
 #
@@ -18,7 +18,7 @@ import numpy as np
 
 def actuator2config(q,r_b):
 
-    """kinetic model\\robot_specific_trans.py
+    """kinematic model\\robot_trans.py
 
         Performs robot-specific transformation to constant curvature continuum robot arms with 3 ways of muscles.
 
@@ -43,7 +43,7 @@ def actuator2config(q,r_b):
 
 def config2homoTrans(k):
 
-    """kinetic model\\robot_specific_trans.py
+    """kinematic model\\robot_trans.py
 
         Transforms constant curvature configuration set to corresponding homogeneous transformation matrix. 
 
@@ -59,7 +59,7 @@ def config2homoTrans(k):
 
     H = np.matlib.zeros((4,4))
 
-    if abs(kappa) < 1e-8: # kappa is sufficiently small that can be recognized as zero
+    if abs(kappa) < 1e-6: # kappa is sufficiently small that can be recognized as zero
         
         H[0,0] = (np.cos(phi) ** 2) * (np.cos(kl) - 1) + 1
         H[0,1] = np.sin(phi) * np.cos(phi) * (np.cos(kl) - 1)
@@ -86,7 +86,7 @@ def config2homoTrans(k):
 
 def config2rotMat(k):
 
-    """kinetic model\\robot_specific_trans.py
+    """kinematic model\\robot_trans.py
 
         Transforms constant curvature configuration set to corresponding homogeneous transformation matrix. And take
         the rotation matrix part of it. Representing the orientation of the tip. Can be used for calculating angular
@@ -109,7 +109,7 @@ def config2rotMat(k):
 
 def config2tipPosition(k):
 
-    """kinetic model\\robot_specific_trans.py
+    """kinematic model\\robot_trans.py
 
         Transforms constant curvature configuration set to corresponding homogeneous transformation matrix. And take
         the translational part of it. Representing the position of the tip. Can be used for calculating translational
@@ -128,6 +128,52 @@ def config2tipPosition(k):
     return r
 
 
+def actuator2homoTrans(q,r_b):
+    """kinematic model\\robot_trans.py
+
+        Combined robot-independent and robot-specific mapping from muscle length to H matrix.
+
+        Input: q = [q1 q2 q3] is the length vector. representing the length of 3 muscles of one section. Unit: mm.
+                r_b is the distance of the robot center and one bellow's center. Should be a fixed parameter. Unit: mm.
+        
+        Output: H is the homogeneous transformation matrix of the end tip from the bottom.
+    """
+    k = actuator2config(q, r_b)
+    H = config2homoTrans(k)
+
+    return H
+
+
+def actuator2rotMat(q,r_b):
+    """kinematic model\\robot_trans.py
+
+        Combined robot-independent and robot-specific mapping from muscle length to R matrix.
+
+        Input: q = [q1 q2 q3] is the length vector. representing the length of 3 muscles of one section. Unit: mm.
+                r_b is the distance of the robot center and one bellow's center. Should be a fixed parameter. Unit: mm.
+    
+        Output: R is the rotational matrix of the end tip from the bottom.
+    """
+    k = actuator2config(q, r_b)
+    R = config2rotMat(k)
+
+    return R
+
+
+def actuator2tipPosition(q,r_b):
+    """kinematic model\\robot_trans.py
+    
+        Combined robot-independent and robot-specific mapping from muscle length to tip position.
+
+        Input: q = [q1 q2 q3] is the length vector. representing the length of 3 muscles of one section. Unit: mm.
+                r_b is the distance of the robot center and one bellow's center. Should be a fixed parameter. Unit: mm.
+
+        Output: r is the position vector of the end tip from the bottom.
+    """
+    k = actuator2config(q, r_b)
+    r = config2tipPosition(k)
+
+    return r
 
 if __name__ == '__main__':
 
