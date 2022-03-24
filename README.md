@@ -1,8 +1,9 @@
 # Soft-Arm-Modelling
- Initial package for dynamic modelling of our soft robot arm
+ Dynamic modelling of soft robot arms that resemble the FESTO Bionic Handling Assistant. Lumped model and Euler-Lagrangian method are used to model the soft arm. Only basic scientific calculation packages like numpy and math are needed here.
 
+---
 
-#### Package list
+### Package list
 
 - kinematic model
   - robot_trans.py:     机器人的坐标变换有关函数

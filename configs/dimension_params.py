@@ -1,1 +1,0 @@
-# Stores dimension (of the robot body) related parameters.
